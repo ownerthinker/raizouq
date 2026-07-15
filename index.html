@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Дмитрий Смирнов — разработка сайтов, которые продают</title>
+<meta name="description" content="Дмитрий Смирнов — веб-разработчик. Проектирую и запускаю сайты, лендинги и веб-приложения под ключ." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#08080a;
+  --bg-2:#0c0c10;
+  --surface:#131318;
+  --surface-2:#1a1a20;
+  --border:rgba(255,255,255,.08);
+  --border-2:rgba(255,255,255,.14);
+  --text:#f4f4f6;
+  --muted:#9a9aa6;
+  --faint:#65656f;
+  --accent:#7c5cff;
+  --accent-2:#22d3ee;
+  --accent-3:#c6f24e;
+  --grad:linear-gradient(120deg,#7c5cff 0%,#22d3ee 100%);
+  --grad-soft:linear-gradient(120deg,rgba(124,92,255,.18),rgba(34,211,238,.18));
+  --maxw:1180px;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:16px;line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:'Space Grotesk','Manrope',sans-serif;line-height:1.05;letter-spacing:-.02em;font-weight:700}
+
+/* ---------- background fx ---------- */
+.bg-fx{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.grid-bg{position:absolute;inset:-2px;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:54px 54px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 40%,transparent 100%);
+}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
+.orb.a{width:520px;height:520px;background:radial-gradient(circle,#7c5cff,transparent 70%);top:-160px;left:-120px;animation:float1 18s ease-in-out infinite}
+.orb.b{width:460px;height:460px;background:radial-gradient(circle,#22d3ee,transparent 70%);top:20%;right:-160px;animation:float2 22s ease-in-out infinite}
+.orb.c{width:420px;height:420px;background:radial-gradient(circle,#c6f24e,transparent 70%);bottom:-160px;left:30%;opacity:.28;animation:float1 26s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,50px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,40px)}}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* cursor glow */
+.cursor-glow{position:fixed;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle,rgba(124,92,255,.14),transparent 60%);
+  transform:translate(-50%,-50%);transition:opacity .4s;mix-blend-mode:screen}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;position:relative;z-index:1}
+section{padding:110px 0;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:22px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--grad)}
+.sec-title{font-size:clamp(30px,4.4vw,52px);max-width:16ch;margin-bottom:18px}
+.sec-sub{color:var(--muted);max-width:56ch;font-size:17px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+
+/* ---------- nav ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:50;transition:.35s}
+header.scrolled{background:rgba(8,8,10,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:11px;font-family:'Manrope',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em}
+.logo .mark{width:34px;height:34px;border-radius:10px;background:var(--grad);display:grid;place-items:center;font-size:15px;color:#08080a;font-weight:800;box-shadow:0 6px 22px rgba(124,92,255,.4)}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:.25s;position:relative}
+.nav-links a:hover{color:var(--text)}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1.5px;background:var(--grad);transition:.3s}
+.nav-links a:hover::after{width:100%}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:12px;transition:.28s;cursor:pointer;border:1px solid transparent;white-space:nowrap}
+.btn-primary{background:var(--grad);color:#08080a;box-shadow:0 8px 26px rgba(124,92,255,.32)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(124,92,255,.5)}
+.btn-ghost{background:rgba(255,255,255,.04);border-color:var(--border-2);color:var(--text)}
+.btn-ghost:hover{background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.nav-cta{display:flex;align-items:center;gap:14px}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.burger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+
+/* ---------- hero ---------- */
+.hero{padding-top:150px;padding-bottom:90px;min-height:100vh;display:flex;align-items:center}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;width:100%}
+.badge{display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:999px;border:1px solid var(--border-2);background:rgba(255,255,255,.03);font-size:13px;color:var(--muted);margin-bottom:26px}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 0 0 rgba(198,242,78,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,242,78,.5)}70%{box-shadow:0 0 0 10px rgba(198,242,78,0)}100%{box-shadow:0 0 0 0 rgba(198,242,78,0)}}
+.hero h1{font-size:clamp(40px,6.4vw,74px);line-height:1;margin-bottom:24px}
+.hero p.lead{font-size:19px;color:var(--muted);max-width:46ch;margin-bottom:34px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:44px}
+.hero-mini{display:flex;gap:34px;flex-wrap:wrap}
+.hero-mini .m .n{font-family:'Space Grotesk';font-size:30px;font-weight:700}
+.hero-mini .m .l{font-size:13px;color:var(--faint)}
+
+/* hero panel (glass dashboard) */
+.panel{position:relative;background:linear-gradient(160deg,rgba(26,26,32,.9),rgba(19,19,24,.75));border:1px solid var(--border-2);border-radius:22px;padding:22px;backdrop-filter:blur(18px);box-shadow:0 30px 80px rgba(0,0,0,.55)}
+.panel::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.35;pointer-events:none}
+.panel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.panel-top .tt{font-family:'JetBrains Mono';font-size:12px;color:var(--muted);letter-spacing:.06em}
+.dots{display:flex;gap:6px}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--surface-2);display:block}
+.dots i:nth-child(1){background:#ff5f57}.dots i:nth-child(2){background:#febc2e}.dots i:nth-child(3){background:#28c840}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.stat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:15px}
+.stat .k{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.stat .v{font-family:'Space Grotesk';font-size:26px;font-weight:700;margin-top:6px}
+.stat .chg{font-size:12px;color:var(--accent-3);margin-top:2px}
+.bars{display:flex;align-items:flex-end;gap:7px;height:76px;padding:12px 4px 0}
+.bars span{flex:1;background:var(--grad);border-radius:5px 5px 0 0;opacity:.85;animation:grow 1.6s ease both}
+@keyframes grow{from{height:0}}
+.feed{margin-top:14px;border-top:1px solid var(--border);padding-top:14px;display:flex;flex-direction:column;gap:10px}
+.feed .row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.feed .row .ic{width:26px;height:26px;border-radius:8px;background:var(--grad-soft);display:grid;place-items:center;font-size:13px;flex-shrink:0}
+.feed .row .tm{margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:var(--faint)}
+.float-card{position:absolute;background:rgba(19,19,24,.92);border:1px solid var(--border-2);border-radius:14px;padding:12px 15px;backdrop-filter:blur(10px);box-shadow:0 18px 40px rgba(0,0,0,.5);font-size:13px;display:flex;align-items:center;gap:10px}
+.fc-1{top:-26px;right:-18px;animation:bob 5s ease-in-out infinite}
+.fc-2{bottom:-34px;left:-24px;animation:bob 6s ease-in-out infinite .8s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.fc-ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px}
+.feed .row .ic svg{width:14px;height:14px;fill:none;stroke:url(#icg);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.fc-ic svg{width:16px;height:16px;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- marquee ---------- */
+.marquee{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:26px 0;overflow:hidden;background:rgba(255,255,255,.015)}
+.marquee-track{display:flex;gap:56px;width:max-content;animation:scrollx 26s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee span{font-family:'Space Grotesk';font-weight:600;font-size:22px;color:var(--faint);display:flex;align-items:center;gap:56px;white-space:nowrap}
+.marquee span::after{content:"✦";color:var(--accent)}
+@keyframes scrollx{to{transform:translateX(-50%)}}
+
+/* ---------- about ---------- */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.about-txt p{color:var(--muted);font-size:17px;margin-bottom:18px}
+.about-txt p strong{color:var(--text);font-weight:600}
+.skill-list{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.skill{}
+.skill .top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px}
+.skill .top .p{font-family:'JetBrains Mono';color:var(--muted)}
+.skill .bar{height:7px;border-radius:6px;background:rgba(255,255,255,.06);overflow:hidden}
+.skill .bar i{display:block;height:100%;border-radius:6px;background:var(--grad);width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- services ---------- */
+.serv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:56px}
+.serv{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;overflow:hidden;transition:.35s}
+.serv::after{content:"";position:absolute;inset:0;background:var(--grad-soft);opacity:0;transition:.35s}
+.serv:hover{transform:translateY(-5px);border-color:var(--border-2)}
+.serv:hover::after{opacity:1}
+.serv>*{position:relative;z-index:1}
+.serv .num{font-family:'JetBrains Mono';font-size:13px;color:var(--accent);letter-spacing:.1em}
+.serv .ic{margin:14px 0 16px;height:30px}
+.serv .ic svg{width:30px;height:30px;fill:none;stroke:url(#icg);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.serv h3{font-size:22px;margin-bottom:10px}
+.serv p{color:var(--muted);font-size:15px}
+
+/* ---------- cases ---------- */
+.cases{display:flex;flex-direction:column;gap:20px;margin-top:56px}
+.case{position:relative;display:grid;grid-template-columns:78px 1fr auto;gap:26px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px 30px;transition:.35s;overflow:hidden}
+.case::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad);transform:scaleY(0);transform-origin:top;transition:.4s}
+.case:hover{border-color:var(--border-2);transform:translateX(6px)}
+.case:hover::before{transform:scaleY(1)}
+.case .idx{font-family:'Space Grotesk';font-size:40px;font-weight:700;color:var(--faint);opacity:.55}
+.case .body h3{font-size:24px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.case .tag{font-family:'JetBrains Mono';font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent-2);border:1px solid var(--border-2);border-radius:999px;padding:3px 10px}
+.case .body p{color:var(--muted);font-size:15px;max-width:60ch}
+.case .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.case .chips b{font-size:12px;font-weight:500;color:var(--faint);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:4px 10px}
+.case .go{width:48px;height:48px;border-radius:50%;border:1px solid var(--border-2);display:grid;place-items:center;font-size:18px;color:var(--muted);transition:.3s;flex-shrink:0}
+.case:hover .go{background:var(--grad);color:#08080a;border-color:transparent;transform:rotate(-45deg)}
+
+/* ---------- process ---------- */
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:56px}
+.step{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--border);border-radius:var(--radius);padding:26px;transition:.3s}
+.step:hover{transform:translateY(-5px);border-color:var(--border-2)}
+.proc-grid:hover .step{opacity:.4;filter:grayscale(.9)}
+.proc-grid:hover .step:hover{opacity:1;filter:none}
+.step .n{width:44px;height:44px;border-radius:12px;background:var(--grad-soft);border:1px solid var(--border-2);display:grid;place-items:center;font-family:'Space Grotesk';font-weight:700;margin-bottom:16px}
+.step h4{font-size:18px;margin-bottom:8px}
+.step p{color:var(--muted);font-size:14px}
+
+/* ---------- stats band ---------- */
+.band{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:52px;border:1px solid var(--border);border-radius:24px;background:linear-gradient(160deg,rgba(124,92,255,.08),rgba(34,211,238,.05));position:relative;overflow:hidden}
+.band .b{text-align:center}
+.band .b .n{font-family:'Space Grotesk';font-size:clamp(34px,5vw,56px);font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.band .b .l{color:var(--muted);font-size:14px;margin-top:6px}
+
+/* ---------- CTA ---------- */
+.cta{position:relative;text-align:center;padding:80px 40px;border:1px solid var(--border-2);border-radius:28px;background:linear-gradient(160deg,var(--surface),var(--bg-2));overflow:hidden}
+.cta::before{content:"";position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,92,255,.28),transparent 60%);top:-260px;left:50%;transform:translateX(-50%);pointer-events:none}
+.cta h2{font-size:clamp(32px,5vw,56px);margin-bottom:18px;position:relative}
+.cta p{color:var(--muted);font-size:18px;max-width:52ch;margin:0 auto 34px;position:relative}
+.cta .btn{position:relative;font-size:16px;padding:15px 30px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--border);padding:46px 0}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot .muted{color:var(--faint);font-size:14px}
+.foot .links{display:flex;gap:22px}
+.foot .links a{color:var(--muted);font-size:14px;transition:.25s}
+.foot .links a:hover{color:var(--text)}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:.08s}.reveal[data-d="2"]{transition-delay:.16s}.reveal[data-d="3"]{transition-delay:.24s}.reveal[data-d="4"]{transition-delay:.32s}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .hero-grid,.about-grid{grid-template-columns:1fr;gap:44px}
+  .serv-grid,.proc-grid,.band{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .burger{display:flex}
+  .nav-links.open{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;background:rgba(8,8,10,.96);backdrop-filter:blur(16px);padding:24px 28px;gap:20px;border-bottom:1px solid var(--border)}
+  .hero{padding-top:120px}
+  section{padding:80px 0}
+  .case{grid-template-columns:1fr;gap:14px}
+  .case .idx{font-size:30px}
+  .float-card{display:none}
+}
+@media(max-width:560px){
+  .serv-grid,.proc-grid,.band{grid-template-columns:1fr}
+  .band{padding:34px}
+  .hero-mini{gap:24px}
+  .nav-cta .btn-ghost{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-fx"><div class="grid-bg"></div><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+<div class="noise"></div>
+<div class="cursor-glow" id="cg"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="icg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs></svg>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="logo">Дмитрий Смирнов</a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#about">Обо мне</a>
+      <a href="#services">Услуги</a>
+      <a href="#cases">Кейсы</a>
+      <a href="#process">Процесс</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-ghost">Контакт</a>
+      <a href="https://t.me/raizouqwork" target="_blank" rel="noopener" class="btn btn-primary">Написать в Telegram →</a>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge reveal"><span class="dot"></span> Открыт для новых проектов</div>
+      <h1 class="reveal" data-d="1">Разрабатываю сайты, которые <span class="grad-text">приносят деньги</span></h1>
+      <p class="lead reveal" data-d="2">Меня зовут Дмитрий Смирнов. Проектирую и запускаю сайты, лендинги и веб-приложения под ключ — от идеи до продакшена. Чистый код, продуманный UX и анимации, которые запоминаются.</p>
+      <div class="hero-cta reveal" data-d="3">
+        <a href="https://t.me/raizouqwork" target="_blank" rel="noopener" class="btn btn-primary">Обсудить проект →</a>
+        <a href="#cases" class="btn btn-ghost">Смотреть кейсы</a>
+      </div>
+      <div class="hero-mini reveal" data-d="4">
+        <div class="m"><div class="n" data-count="10" data-suffix="+">0</div><div class="l">проектов запущено</div></div>
+        <div class="m"><div class="n" data-count="4" data-suffix=" года">0</div><div class="l">в разработке</div></div>
+        <div class="m"><div class="n" data-count="100" data-suffix="%">0</div><div class="l">под ключ</div></div>
+      </div>
+    </div>
+    <div class="reveal" data-d="2">
+      <div class="panel">
+        <div class="panel-top">
+          <span class="tt">// dashboard · клиент online</span>
+          <span class="dots"><i></i><i></i><i></i></span>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="k">Заявки</div><div class="v">128</div><div class="chg">▲ +24%</div></div>
+          <div class="stat"><div class="k">Конверсия</div><div class="v">6.4%</div><div class="chg">▲ +0.9</div></div>
+        </div>
+        <div class="stat">
+          <div class="k">Трафик за месяц</div>
+          <div class="bars">
+            <span style="height:38%;animation-delay:.1s"></span><span style="height:56%;animation-delay:.2s"></span><span style="height:44%;animation-delay:.3s"></span><span style="height:70%;animation-delay:.4s"></span><span style="height:60%;animation-delay:.5s"></span><span style="height:88%;animation-delay:.6s"></span><span style="height:100%;animation-delay:.7s"></span>
+          </div>
+        </div>
+        <div class="feed">
+          <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L5 13h6l-1 9 9-12h-6z"/></svg></span> Новый лендинг задеплоен <span class="tm">2 мин</span></div>
+          <div class="row"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 11.5a7.5 7.5 0 01-10.9 6.7L4 20l1.8-4.9A7.5 7.5 0 1121 11.5z"/></svg></span> Заявка из формы · Telegram <span class="tm">8 мин</span></div>
+          </div>
+        <div class="float-card fc-1"><span class="fc-ic" style="background:rgba(198,242,78,.16)"><svg viewBox="0 0 24 24" style="stroke:#c6f24e"><path d="M5 12l4 4L19 7"/></svg></span><div><b>Деплой</b><br><span style="color:var(--faint);font-size:11px">продакшен · готово</span></div></div>
+        <div class="float-card fc-2"><span class="fc-ic" style="background:rgba(34,211,238,.16)"><svg viewBox="0 0 24 24" style="stroke:#22d3ee"><path d="M4 19h16"/><path d="M7 15l3.5-3.5 3 3L20 7"/><path d="M20 11V7h-4"/></svg></span><div><b>+172%</b><br><span style="color:var(--faint);font-size:11px">рост заявок</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>JavaScript<span></span></span><span>React<span></span></span><span>Next.js<span></span></span><span>TypeScript<span></span></span><span>Node.js<span></span></span><span>Анимации<span></span></span><span>UI / UX<span></span></span><span>GSAP<span></span></span>
+    <span>JavaScript<span></span></span><span>React<span></span></span><span>Next.js<span></span></span><span>TypeScript<span></span></span><span>Node.js<span></span></span><span>Анимации<span></span></span><span>UI / UX<span></span></span><span>GSAP<span></span></span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-txt reveal">
+      <div class="eyebrow">Обо мне</div>
+      <h2 class="sec-title">Делаю продукт, а не просто «сайт»</h2>
+      <p>Я <strong>веб-разработчик</strong> и занимаюсь созданием сайтов уже несколько лет. Беру задачу целиком: проектирование, дизайн, разработка и запуск. Мне важно, чтобы результат не просто красиво выглядел, а <strong>работал на цель</strong> — приводил заявки и клиентов.</p>
+      <p>Люблю чистый интерфейс, продуманную типографику и <strong>живые анимации</strong>, которые делают сайт дорогим и запоминающимся. Общаюсь напрямую, без бюрократии, и держу в курсе на каждом этапе.</p>
+    </div>
+    <div class="skill-list reveal" data-d="1">
+      <div class="skill"><div class="top"><span>Frontend / вёрстка</span><span class="p">95%</span></div><div class="bar"><i data-w="95"></i></div></div>
+      <div class="skill"><div class="top"><span>Анимации и интерактив</span><span class="p">92%</span></div><div class="bar"><i data-w="92"></i></div></div>
+      <div class="skill"><div class="top"><span>UI / UX дизайн</span><span class="p">85%</span></div><div class="bar"><i data-w="85"></i></div></div>
+      <div class="skill"><div class="top"><span>Backend / интеграции</span><span class="p">80%</span></div><div class="bar"><i data-w="80"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">Что я делаю</div>
+    <h2 class="sec-title">Закрываю задачу целиком</h2>
+    <p class="sec-sub">От первого экрана до продакшена — беру на себя всё, чтобы вы получили готовый рабочий продукт.</p></div>
+    <div class="serv-grid">
+      <div class="serv reveal"><div class="num">01</div><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 8.5h18"/><path d="M9 21h6"/><path d="M12 17v4"/></svg></div><h3>Сайты и лендинги</h3><p>Страницы, которые превращают клики в заявки. Дизайн, разработка, аналитика и скорость.</p></div>
+      <div class="serv reveal" data-d="1"><div class="num">02</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.7 4.8 4.8 1.7-4.8 1.7L12 16l-1.7-4.8L5.5 9.5l4.8-1.7z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></div><h3>Анимации и интерактив</h3><p>Живые, «дорогие» анимации и микровзаимодействия, которые выделяют сайт среди конкурентов.</p></div>
+      <div class="serv reveal" data-d="2"><div class="num">03</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 16l9 5 9-5"/></svg></div><h3>Веб-приложения</h3><p>Личные кабинеты, дашборды, сервисы и MVP для стартапов. Рабочий продукт, а не презентация.</p></div>
+      <div class="serv reveal" data-d="3"><div class="num">04</div><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 5v14h16"/><path d="M7 14l3.5-3.5 3 3L21 7"/><path d="M21 11V7h-4"/></svg></div><h3>Поддержка и развитие</h3><p>Обновляю, ускоряю и развиваю сайты после запуска. Слежу за стабильностью, скоростью и метриками.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">Кейсы</div>
+    <h2 class="sec-title">Результаты, а не обещания</h2>
+    <p class="sec-sub">Несколько проектов из портфолио. Наведите на кейс — и он оживает.</p></div>
+    <div class="cases">
+      <a href="https://ownerthinker.github.io/Thumbnail-Ref/" target="_blank" rel="noopener" class="case reveal">
+        <div class="idx">01</div>
+        <div class="body">
+          <h3>Thumbnail Ref <span class="tag">Веб-сервис</span></h3>
+          <p>Библиотека референсов превью для дизайнеров с AI-поиском. Тысячи ярких превью по любым темам — от крипты до психологии — подбираются по запросу.</p>
+          <div class="chips"><b>AI-поиск</b><b>Каталог</b><b>Адаптив</b><b>Анимации</b></div>
+        </div>
+        <div class="go">↗</div>
+      </a>
+      <a href="https://volkovmatvey.github.io/" target="_blank" rel="noopener" class="case reveal" data-d="1">
+        <div class="idx">02</div>
+        <div class="body">
+          <h3>Матвей Волков — личный бренд <span class="tag">Landing</span></h3>
+          <p>Лендинг для личного продюсера и наставника: сильный первый экран, биография-таймлайн, кейсы и результаты учеников. Плавные анимации и акцент на заявках в Telegram.</p>
+          <div class="chips"><b>Landing</b><b>Личный бренд</b><b>Таймлайн</b><b>Анимации</b></div>
+        </div>
+        <div class="go">↗</div>
+      </a>
+      <a href="https://raizouq.ru" target="_blank" rel="noopener" class="case reveal" data-d="2">
+        <div class="idx">03</div>
+        <div class="body">
+          <h3>Дмитрий Смирнов — портфолио <span class="tag">Портфолио</span></h3>
+          <p>Этот сайт: тёмное анимированное портфолио с живым дашбордом, плавными reveal-анимациями, кастомным курсором и адаптивом. Собран на чистом коде и задеплоен на своём домене.</p>
+          <div class="chips"><b>Анимации</b><b>Адаптив</b><b>Чистый код</b><b>Свой домен</b></div>
+        </div>
+        <div class="go">↗</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow">Процесс</div>
+    <h2 class="sec-title">Понятный путь от идеи до запуска</h2>
+    <p class="sec-sub">Прозрачные этапы — вы всегда знаете, что происходит и когда будет результат.</p></div>
+    <div class="proc-grid">
+      <div class="step reveal"><div class="n">01</div><h4>Бриф</h4><p>Разбираем задачу, цели и аудиторию. Бесплатно предлагаю решение, сроки и стоимость.</p></div>
+      <div class="step reveal" data-d="1"><div class="n">02</div><h4>Дизайн</h4><p>Проектирую структуру и визуал. Согласуем внешний вид до строчки кода.</p></div>
+      <div class="step reveal" data-d="2"><div class="n">03</div><h4>Разработка</h4><p>Пишу чистый код, добавляю анимации и интеграции. Показываю прогресс на каждом шаге.</p></div>
+      <div class="step reveal" data-d="3"><div class="n">04</div><h4>Запуск</h4><p>Тестирую, деплою и передаю проект. Остаюсь на связи и поддерживаю после запуска.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="band reveal">
+      <div class="b"><div class="n" data-count="10" data-suffix="+">0</div><div class="l">проектов запущено</div></div>
+      <div class="b"><div class="n" data-count="100" data-suffix="%">0</div><div class="l">проектов под ключ</div></div>
+      <div class="b"><div class="n" data-count="15" data-suffix=" мин">0</div><div class="l">среднее время ответа</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Обсудим ваш <span class="grad-text">проект?</span></h2>
+      <p>Расскажите, что нужно — предложу решение, сроки и стоимость. Отвечаю быстро в Telegram.</p>
+      <a href="https://t.me/raizouqwork" target="_blank" rel="noopener" class="btn btn-primary">Написать в Telegram · @raizouqwork →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="logo">Дмитрий Смирнов</div>
+    <div class="muted">© 2026 · Разработка сайтов под ключ</div>
+    <div class="links">
+      <a href="https://t.me/raizouqwork" target="_blank" rel="noopener">Telegram</a>
+      <a href="https://ownerthinker.github.io/Thumbnail-Ref/" target="_blank" rel="noopener">Thumbnail Ref</a>
+      <a href="#top">Наверх ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// header scroll
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>20));
+// burger
+const burger=document.getElementById('burger'),navlinks=document.getElementById('navlinks');
+burger.addEventListener('click',()=>navlinks.classList.toggle('open'));
+navlinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navlinks.classList.remove('open')));
+// cursor glow
+const cg=document.getElementById('cg');
+let cx=innerWidth/2,cy=innerHeight/2,tx=cx,ty=cy;
+addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY});
+(function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;cg.style.left=cx+'px';cg.style.top=cy+'px';requestAnimationFrame(loop)})();
+// reveal + counters + skill bars
+const io=new IntersectionObserver((es)=>{es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');
+  if(en.target.dataset.count!==undefined)runCount(en.target);
+  en.target.querySelectorAll&&en.target.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%');
+  io.unobserve(en.target);}})},{threshold:.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.querySelectorAll('[data-count]').forEach(el=>io.observe(el));
+document.querySelectorAll('.skill-list').forEach(el=>io.observe(el));
+function runCount(el){const end=+el.dataset.count,suf=el.dataset.suffix||'';let t0=null;const dur=1400;
+  function tick(t){if(!t0)t0=t;const p=Math.min((t-t0)/dur,1);const e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e)+suf;if(p<1)requestAnimationFrame(tick)}requestAnimationFrame(tick)}
+</script>
+</body>
+</html>
